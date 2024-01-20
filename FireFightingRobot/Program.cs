@@ -3,6 +3,7 @@ using FireFightingRobot.DAL;
 using FireFightingRobot.DAL.Repositories;
 using FireFightingRobot.Domain.Interfaces;
 using FireFigthingRobot.ReadStack;
+using FireFigthingRobot.ReadStack.DeviceHistory;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -28,7 +29,7 @@ builder.Services
         x.UseSqlServer(connectionString);
     });
 
-builder.Services.AddMediatR(typeof(RegisterDeviceCommand).Assembly);
+builder.Services.AddMediatR(typeof(RegisterDeviceCommand).Assembly, typeof(GetDeviceRecentHistoriesQuery).Assembly);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 

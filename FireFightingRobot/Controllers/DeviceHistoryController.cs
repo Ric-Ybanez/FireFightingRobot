@@ -3,6 +3,7 @@ using FireFightingRobot.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using FireFightingRobot.Framework.Extensions;
+using FireFigthingRobot.ReadStack.DeviceHistory;
 
 namespace FireFightingRobot.Controllers;
 
@@ -15,6 +16,7 @@ public class DeviceHistoryController
     {
         _mediator = mediator;
     }
+
     [HttpPost]
     public async Task<IActionResult> CreateDeviceHistory(AddDeviceHistoryVm vm)
     {
@@ -26,6 +28,22 @@ public class DeviceHistoryController
             Temperature  = vm.Temperature
         });
 
+        return result.ToActionResult();
+    }
+
+    [HttpGet]
+    [Route("recent")]
+    public async Task<IActionResult> GetRecentHistories()
+    {
+        var result = await _mediator.Send(new GetDeviceRecentHistoriesQuery());
+        return result.ToActionResult();
+    }
+
+    [HttpGet]
+    [Route("status")]
+    public async Task<IActionResult> GetStatusAlert()
+    {
+        var result = await _mediator.Send(new GetDevicesHighestAlertStatusQuery());
         return result.ToActionResult();
     }
 }
