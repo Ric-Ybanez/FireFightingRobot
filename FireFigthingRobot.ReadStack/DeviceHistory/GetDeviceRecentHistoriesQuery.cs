@@ -2,8 +2,8 @@
 using FireFightingRobot.Framework;
 using MediatR;
 using FireFigthingRobot.ReadStack.DeviceHistory.Dtos;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace FireFigthingRobot.ReadStack.DeviceHistory;
 
@@ -12,7 +12,7 @@ public class GetDeviceRecentHistoriesQuery : IRequest<Result<List<DeviceHistoryD
     public sealed class GetDeviceRecentHistoriesQueryHandler :
         ReadStackCommandHandlerBase<GetDeviceRecentHistoriesQuery, Result<List<DeviceHistoryDto>>>
     {
-        public GetDeviceRecentHistoriesQueryHandler(ReadContext readContext, IMapper mapper) : base(readContext, mapper)
+        public GetDeviceRecentHistoriesQueryHandler(ReadContext readContext, IMapper mapper, ILogger logger) : base(readContext, mapper, logger)
         {
         }
 

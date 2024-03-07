@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using FireFightingRobot.DAL;
 using FireFightingRobot.Framework;
 using MediatR;
+using Serilog;
 
 namespace FireFigthingRobot.ReadStack
 {
@@ -9,11 +11,13 @@ namespace FireFigthingRobot.ReadStack
     {
         protected readonly ReadContext ReadContext;
         protected readonly IMapper Mapper;
+        protected readonly ILogger Logger;
 
-        protected ReadStackCommandHandlerBase(ReadContext readContext, IMapper mapper)
+        protected ReadStackCommandHandlerBase(ReadContext readContext, IMapper mapper, ILogger logger)
         {
             ReadContext = readContext;
             Mapper = mapper;
+            Logger = logger;
         }
 
         protected abstract override TResult Handle(TCommand request);
@@ -29,6 +33,7 @@ namespace FireFigthingRobot.ReadStack
 
             catch (Exception ex)
             {
+                Logger.Error(errorMessage, ex.ToString());
                 return Result.Fail<T>(errorMessage);
             }
         }

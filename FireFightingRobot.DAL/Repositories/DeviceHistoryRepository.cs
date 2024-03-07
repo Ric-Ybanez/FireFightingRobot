@@ -2,16 +2,18 @@
 using FireFightingRobot.Domain;
 using FireFightingRobot.Domain.Interfaces;
 using FireFightingRobot.Framework;
+using Serilog;
 
 namespace FireFightingRobot.DAL.Repositories
 {
     public class DeviceHistoryRepository : Repository<Entities.DeviceHistory>, IDeviceHistoryRepository
     {
         private readonly IMapper _mapper;
-        public DeviceHistoryRepository(DataContext dataContext, IMapper mapper)
-           : base(dataContext)
+        public DeviceHistoryRepository(DataContext dataContext, IMapper mapper, ILogger logger)
+           : base(dataContext, logger)
         {
             _mapper = mapper;
+            
         }
         public Result<Lazy<int>> Add(DeviceHistory history) =>
          Try

@@ -3,6 +3,7 @@ using FireFightingRobot.Framework;
 using MediatR;
 using FireFigthingRobot.ReadStack.DeviceHistory.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace FireFigthingRobot.ReadStack.DeviceHistory;
 
@@ -11,7 +12,7 @@ public class GetDevicesHighestAlertStatusQuery : IRequest<Result<DeviceHistoryAl
     public sealed class GetDevicesHighestAlertStatusQueryHandler :
         ReadStackCommandHandlerBase<GetDevicesHighestAlertStatusQuery, Result<DeviceHistoryAlertDto>>
     {
-        public GetDevicesHighestAlertStatusQueryHandler(ReadContext readContext, IMapper mapper) : base(readContext, mapper)
+        public GetDevicesHighestAlertStatusQueryHandler(ReadContext readContext, IMapper mapper, ILogger logger) : base(readContext, mapper, logger)
         {
         }
 

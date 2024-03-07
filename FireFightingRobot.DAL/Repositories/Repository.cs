@@ -1,6 +1,6 @@
 ﻿using FireFightingRobot.Framework;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace FireFightingRobot.DAL.Repositories;
 
@@ -10,8 +10,9 @@ public abstract class Repository<T> where T : class
     protected readonly DataContext DataContext;
     protected DbSet<T> Items;
 
-    public Repository(DataContext dataContext)
+    public Repository(DataContext dataContext, ILogger logger)
     {
+        Logger = logger;
         DataContext = dataContext;
         Items = dataContext.Set<T>();
     }
@@ -75,6 +76,7 @@ public abstract class Repository<T> where T : class
 
         catch (Exception ex)
         {
+            Logger.Error(errorMessage, ex);
             return Result.Fail(errorMessage);
         }
     }
@@ -90,6 +92,7 @@ public abstract class Repository<T> where T : class
 
         catch (Exception ex)
         {
+            Logger.Error(errorMessage, ex);
             return Result.Fail<T>(errorMessage);
         }
     }
@@ -105,6 +108,7 @@ public abstract class Repository<T> where T : class
 
         catch (Exception ex)
         {
+            Logger.Error(errorMessage, ex);
             return Result.Fail<K>(errorMessage);
         }
     }
@@ -120,6 +124,7 @@ public abstract class Repository<T> where T : class
 
         catch (Exception ex)
         {
+            Logger.Error(errorMessage, ex);
             return Result.Fail<K>(errorMessage);
         }
     }

@@ -3,14 +3,15 @@ using AutoMapper.QueryableExtensions;
 using FireFightingRobot.Domain;
 using FireFightingRobot.Domain.Interfaces;
 using FireFightingRobot.Framework;
+using Serilog;
 
 namespace FireFightingRobot.DAL.Repositories
 {
     public class DeviceRepository : Repository<Entities.Device>, IDeviceRepository  
     {
         private readonly IMapper _mapper;
-        public DeviceRepository(DataContext dataContext, IMapper mapper)
-           : base(dataContext)
+        public DeviceRepository(DataContext dataContext, IMapper mapper, ILogger logger)
+           : base(dataContext, logger)
         {
             _mapper = mapper;
         }
