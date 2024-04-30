@@ -25,7 +25,8 @@ public class DeviceHistoryController
             DeviceKey = vm.DeviceKey,
             Humidity = vm.Humidity,
             Smoke = vm.Smoke,
-            Temperature  = vm.Temperature
+            Temperature  = vm.Temperature,
+            FireDetected = vm.FireDetected
         });
 
         return result.ToActionResult();

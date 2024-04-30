@@ -6,5 +6,6 @@
         public double Temperature { get; set; }
         public double Humidity { get; set; }
         public double Smoke { get; set; }
+        public string FireDetected { get; set; }
     }
 }

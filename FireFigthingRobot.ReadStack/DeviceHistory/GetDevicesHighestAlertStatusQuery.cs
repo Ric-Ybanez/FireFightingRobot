@@ -4,6 +4,7 @@ using MediatR;
 using FireFigthingRobot.ReadStack.DeviceHistory.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using FireFightingRobot.Framework.Enums;
 
 namespace FireFigthingRobot.ReadStack.DeviceHistory;
 
@@ -20,33 +21,31 @@ public class GetDevicesHighestAlertStatusQuery : IRequest<Result<DeviceHistoryAl
             RunQuery(
                 () =>
                 {
+                    var latestHistory = ReadContext.DeviceHistories
+                        .Include(t => t.Device)
+                        .OrderByDescending(o => o.CreatedDate).FirstOrDefault();
+
                     var histories = ReadContext.DeviceHistories
                         .Include(t => t.Device)
+                        .Where(t=> t.CreatedDate >= DateTime.Now.AddDays(1))
                         .GroupBy(g => g.DeviceId)
                         .Select(histories => histories.OrderByDescending(o => o.CreatedDate).FirstOrDefault())
                         .ToList();
 
-                   var highestAlert =  histories.OrderByDescending(o => o.HeatIndex)
-                                        .ThenByDescending(t => t.Smoke)
-                                        .ThenByDescending(t => t.Temperature)
-                                        .ThenByDescending(t => t.Humidity)
-                                        .First();
+                   var highestAlert =  histories
+                                        .OrderByDescending(o=> o.AlertLevel)
+                                        .FirstOrDefault() ?? latestHistory;
 
                     return new DeviceHistoryAlertDto
                     {
-                        DeviceId = highestAlert.DeviceId,
-                        DeviceKey = highestAlert.Device.DeviceKey,
-                        AlertLevel = CalculateAlertLevel(highestAlert),
+                        DeviceId = highestAlert?.DeviceId ?? 0,
+                        DeviceKey = highestAlert?.Device.DeviceKey ?? string.Empty,
+                        AlertLevel = highestAlert?.AlertLevel ?? AlertLevel.Ok.Value,
+                        FireDetected = highestAlert?.FireDetected ?? string.Empty,
+                        CreatedDate = highestAlert?.CreatedDate ?? DateTime.Now,
                         AsOfDate = DateTime.Now
                     };
                 }
                 , "Error trying to retrieve recent alert device level");
-
-        private string CalculateAlertLevel(FireFightingRobot.DAL.Entities.DeviceHistory history) 
-        {
-            return "OK";
-        }
     }
-
-
 }

@@ -9,6 +9,7 @@ public class CreateDeviceHistoryCommand : IRequest<Result<int>>
     public double Temperature { get; set; }
     public double Humidity { get; set; }
     public double Smoke { get; set; }
+    public string FireDetected { get; set; }
 
     public class Handler : BaseCommandHandler<CreateDeviceHistoryCommand, Result<int>>
     {
@@ -29,7 +30,7 @@ public class CreateDeviceHistoryCommand : IRequest<Result<int>>
             if (device.Failure)
                 return Result.Fail<int>(device.Error);
 
-            var deviceHistory = Domain.DeviceHistory.Create(device.Value, request.Temperature, request.Smoke, request.Humidity);
+            var deviceHistory = Domain.DeviceHistory.Create(device.Value, request.Temperature, request.Smoke, request.Humidity, request.FireDetected);
 
             if (deviceHistory.Failure)
                 return Result.Fail<int>(deviceHistory.Error);
